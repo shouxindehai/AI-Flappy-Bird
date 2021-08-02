@@ -4,18 +4,16 @@ import matplotlib.pyplot as plt
 from algorithms import q_learning
 
 def evaluate_learning(
-        sim,series_size=50, num_series=5, gamma=0.99, alpha=0.7,
+        sim,series_size=100, num_series=100, gamma=0.99, alpha=0.7,
         epsilon=0.0001):
     '''
-    :param sim: The queuing object
-    :param series_size: the size of series
+    :param sim: The object of the whole game system
+    :param series_size: the size of series, the number of episodes in a series
     :param num_series: the number of series
-    :return: a result policy
     '''
-    # initialise Q values
-
-    #Q = 0*np.ones((sim.num_states,sim.num_actions))  #选择重新开始训练，一开始初始化Q表为全0
-    Q = np.load('save.npy')
+    # initialise Q values 初始化Q表
+    Q = 0*np.ones((sim.num_states,sim.num_actions))  #选择重新开始训练，一开始初始化Q表为全0
+    #Q = np.load('save.npy')    #选择用已经收敛的参数
     print(Q.shape)
     figrew, axrew = plt.subplots()
     total_reward_seq = [0]
@@ -31,7 +29,7 @@ def evaluate_learning(
             rewardlist.append(sim.score)# 每次episode后得到一个reward值，接续到rewardlist末尾
             total_episodes += 1
         total_reward_seq.append(np.mean(np.array(rewardlist))) # 这一系列的episode的rewardlist，转化成数组求平均值，接续到总reward列表里
-        np.save('save01.npy',Q)                  # 每一系列(series)中的所有episode结束，保存Q
+        np.save('save_new.npy',Q)                  # 每一系列(series)中的所有episode结束，保存Q
     total_reward_seq = np.array(total_reward_seq) # 当一切训练结束，总reward列表转化成数组，方便plot打印图
     #下面是作图
     axrew.plot(
